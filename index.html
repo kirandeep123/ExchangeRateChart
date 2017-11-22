@@ -1,0 +1,39 @@
+<html ng-app="myApp">
+<head>
+  <title>AngularJS</title>
+<!--  <script src="node_modules/chart.js/Chart.min.js"></script>-->
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+  <!--  <script src="scripts/Chart_Module/tc-angular-chartjs.min.js"></script>-->
+<script src ="Chart.min.js"></script> 
+  <script src="angular-chart.js"></script>
+    <script>
+    
+    // dependency injected for chart js 
+    myApp=angular.module('myApp',['chart.js']);
+        myApp.controller('myController',function($scope,$http){
+        	 var arrData =[]; // data to be displayed 
+        	 var arrLabels=[]; // labels to be displayed
+           
+            	 $http.get('https://api.coinmarketcap.com/v1/ticker/?limit=10').success(function(response){
+                	// iterate over the response data 
+                    response.map(function(item){
+                    	arrData.push(item.price_usd);
+                  	  arrLabels.push(item.name);
+                    });
+                            $scope.chartLabels = arrLabels.slice(0);
+                              $scope.exchangeRateData=arrData.slice(0);
+                                });
+        });
+        // to refresh the data after every 5 minutes 
+            setTimeout(location.reload.bind(location), 300000);
+
+    </script>
+</head>
+<body ng-controller ="myController" >
+<!-- bar chart set class accordingly for different type of chart type say for pie set class ="chart chart-pie" -->
+   <canvas id="bar" class="chart chart-bar" chart-data="exchangeRateData" chart-labels="chartLabels" legend="true">
+				</canvas>
+ 
+</body>
+</html>
